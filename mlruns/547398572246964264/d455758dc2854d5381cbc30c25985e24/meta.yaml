@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/mohamedkorayem/Offline_Data/Github/MLOps_final_project/mlruns/547398572246964264/d455758dc2854d5381cbc30c25985e24/artifacts
+end_time: 1748721769682
+entry_point_name: ''
+experiment_id: '547398572246964264'
+lifecycle_stage: active
+run_id: d455758dc2854d5381cbc30c25985e24
+run_name: GradientBoosting
+run_uuid: d455758dc2854d5381cbc30c25985e24
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748721295192
+status: 3
+tags: []
+user_id: mohamedkorayem

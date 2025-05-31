@@ -1,0 +1,15 @@
+artifact_uri: file:///Users/mohamedkorayem/Offline_Data/Github/MLOps_final_project/mlruns/547398572246964264/0821d14e131b4dde8e3c3a4b34efcb17/artifacts
+end_time: 1748721295190
+entry_point_name: ''
+experiment_id: '547398572246964264'
+lifecycle_stage: active
+run_id: 0821d14e131b4dde8e3c3a4b34efcb17
+run_name: RandomForest
+run_uuid: 0821d14e131b4dde8e3c3a4b34efcb17
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1748721284476
+status: 3
+tags: []
+user_id: mohamedkorayem
