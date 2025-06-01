@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from prometheus_fastapi_instrumentator import Instrumentator
 from prometheus_client import Counter, Histogram
@@ -11,7 +12,13 @@ from typing import List
 
 app = FastAPI(title="Hand Gesture Recognition API")
 Instrumentator().instrument(app).expose(app)
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # or set specific origin ["http://localhost:5500"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # Custom metrics
 inference_latency = Histogram("inference_latency_seconds", "Latency for model predictions")
 invalid_input_counter = Counter("invalid_landmark_shape_total", "Count of invalid input shapes")
@@ -35,6 +42,7 @@ def root():
 @inference_latency.time()
 def predict_landmark(request: LandmarkRequest):
     landmarks = request.landmarks
+    #print("Received request JSON:", landmarks)
 
     # Input validation
     if len(landmarks) != 21 or any(len(point) != 3 for point in landmarks):
