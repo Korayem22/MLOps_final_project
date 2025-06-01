@@ -1,13 +1,14 @@
-name: Build and Push Docker Image to Azure Container Registry
+name: Build and Deploy to Azure Container Instance
 
 on:
   push:
     branches:
-      - main # or your desired branch
+      - main  # or your deployment branch
 
 jobs:
-  build-and-push:
+  build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -17,7 +18,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Azure CLI - Log in to ACR
+      - name: Log in to ACR
         run: |
           az acr login --name ${{ secrets.AZURE_REGISTRY_NAME }}
 
@@ -25,3 +26,26 @@ jobs:
         run: |
           docker build -t ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/handgesture:latest .
           docker push ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/handgesture:latest
+
+      - name: Delete existing container instance (if exists)
+        run: |
+          az container delete \
+            --name ${{ secrets.AZURE_CONTAINER_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --yes || echo "No existing container to delete"
+
+      - name: Deploy to Azure Container Instance
+        run: |
+          az container create \
+            --name ${{ secrets.AZURE_CONTAINER_NAME }} \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --image ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io/handgesture:latest \
+            --registry-login-server ${{ secrets.AZURE_REGISTRY_NAME }}.azurecr.io \
+            --registry-username $(az acr credential show --name ${{ secrets.AZURE_REGISTRY_NAME }} --query username -o tsv) \
+            --registry-password $(az acr credential show --name ${{ secrets.AZURE_REGISTRY_NAME }} --query passwords[0].value -o tsv) \
+            --dns-name-label ${{ secrets.AZURE_CONTAINER_NAME }}-api \
+            --ports 8000 \
+            --cpu 1 \
+            --memory 1.5 \
+            --restart-policy OnFailure \
+            --query "{FQDN:ipAddress.fqdn}" --output table
