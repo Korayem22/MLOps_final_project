@@ -26,7 +26,7 @@ def test_predict_missing_points():
     invalid_data = {"landmarks": [[0.1, 0.2, 0.0]] * 20}  # only 20 points
     response = client.post("/predict", json=invalid_data)
     assert response.status_code == 400
-    assert response.json()["detail"] == "Exactly 21 landmarks are required."
+    assert response.json()["detail"] == "Exactly 21 landmarks with (x, y, z) each are required."
 
 # Test /predict with malformed input
 def test_predict_malformed():
