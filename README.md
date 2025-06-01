@@ -22,7 +22,7 @@ A FastAPI-based service that classifies hand gestures using MediaPipe landmarks 
   "landmarks": [[0.1, 0.2, 0.0], ..., [1.1, 1.2, 0.0]]  // 21 total
 }
 
-## 📡 Run with Docker
+## Run with Docker
 docker build -t hand-gesture-api .
 docker run -p 8000:8000 hand-gesture-api
 
